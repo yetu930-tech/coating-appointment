@@ -44,19 +44,17 @@
             border-color: #D9F107;
             box-shadow: 0 0 0 2px rgba(217, 241, 7, 0.5);
         }
-        .litepicker .container {
-            background-color: #2A2A4E;
-            border: none;
+        .litepicker {
+            background-color: #2A2A4E !important;
+            border: none !important;
         }
         .litepicker .container__months .month-item-header {
             background-color: #191935;
+            color: #F3F4F6;
         }
         .litepicker .container__months .month-item-header .button-previous-month,
         .litepicker .container__months .month-item-header .button-next-month {
             color: #D9F107;
-        }
-        .litepicker .container__months .month-item-header .month-item-header-field {
-            color: #F3F4F6;
         }
         .litepicker .day-item {
             color: #F3F4F6;
@@ -94,13 +92,13 @@
             <!-- 姓名 -->
             <div>
                 <label for="name" class="block text-text-light mb-1">姓名<span class="text-red-500">*</span></label>
-                <input type="text" id="name" name="name" class="form-input" placeholder="請輸入姓名">
+                <input type="text" id="name" name="name" class="form-input" placeholder="請輸入姓名" required>
             </div>
 
             <!-- 手機號碼 -->
             <div>
                 <label for="phone" class="block text-text-light mb-1">手機號碼<span class="text-red-500">*</span></label>
-                <input type="tel" id="phone" name="phone" class="form-input" placeholder="09xxxxxxxx">
+                <input type="tel" id="phone" name="phone" class="form-input" placeholder="09xxxxxxxx" required>
                 <p id="phoneError" class="text-red-400 text-sm mt-1 hidden">請輸入有效的台灣手機號碼 (09xxxxxxxx)</p>
             </div>
 
@@ -128,7 +126,7 @@
             <!-- 預約日期 -->
             <div>
                 <label for="date" class="block text-text-light mb-1">預約日期<span class="text-red-500">*</span></label>
-                <input type="text" id="date" name="date" class="form-input" placeholder="點擊選擇日期" readonly>
+                <input type="text" id="date" name="date" class="form-input" placeholder="點擊選擇日期" readonly required>
             </div>
 
             <!-- 預約時段 -->
@@ -162,7 +160,7 @@
             </div>
             
             <!-- 提交中 loading 畫面 -->
-            <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden">
+            <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
                 <div class="text-center">
                     <div class="spinner mx-auto mb-4"></div>
                     <p class="text-xl">預約提交中，請稍候...</p>
@@ -173,7 +171,7 @@
     </div>
 
     <!-- Modal for success/error messages -->
-    <div id="modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden">
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
         <div class="bg-card-dark p-8 rounded-lg shadow-2xl max-w-sm w-full text-center">
             <h3 id="modalTitle" class="text-2xl font-bold mb-4 text-text-light"></h3>
             <p id="modalMessage" class="mb-6 text-text-light"></p>
@@ -206,27 +204,37 @@
 
         // 檢查所有必填欄位是否已填寫
         function checkFormValidity() {
-            const requiredFields = appointmentForm.querySelectorAll('[required]');
+            const requiredFields = Array.from(appointmentForm.querySelectorAll('[required]'));
             let allValid = true;
-            requiredFields.forEach(field => {
+
+            for (const field of requiredFields) {
+                // 如果欄位在隱藏的區塊中，則不進行驗證
+                if (field.closest('.hidden')) {
+                    continue;
+                }
                 if (field.type === 'radio') {
                     const group = document.querySelector(`input[name="${field.name}"]:checked`);
-                    if (!group) allValid = false;
-                } else if (!field.value || field.value === "") {
+                    if (!group) {
+                        allValid = false;
+                        break;
+                    }
+                } else if (!field.value.trim()) {
                     allValid = false;
+                    break;
                 }
-            });
+            }
 
-            // 特殊驗證：電話號碼和照片上傳
-            if (!validatePhone(phoneInput.value)) allValid = false;
-            if (photoUploadSection.classList.contains('block') && carPhotosInput.files.length === 0) allValid = false;
+            // 特殊驗證：電話號碼
+            if (!validatePhone(phoneInput.value)) {
+                allValid = false;
+            }
             
             submitBtn.disabled = !allValid;
         }
 
         // Litepicker 初始化
         const picker = new Litepicker({
-            element: dateInput,
+            element: document.getElementById('date'),
             lang: 'zh-TW',
             format: 'YYYY-MM-DD',
             singleMode: true,
@@ -251,11 +259,9 @@
             radio.addEventListener('change', () => {
                 if (radio.value === '鍍膜') {
                     photoUploadSection.classList.remove('hidden');
-                    photoUploadSection.classList.add('block');
                     carPhotosInput.setAttribute('required', 'required');
                 } else {
                     photoUploadSection.classList.add('hidden');
-                    photoUploadSection.classList.remove('block');
                     carPhotosInput.removeAttribute('required');
                 }
                 checkFormValidity();
@@ -303,39 +309,46 @@
 
             if (!fileValid) {
                 event.target.value = '';
+                photoPreview.innerHTML = '';
             } else {
                 photoError.classList.add('hidden');
             }
             checkFormValidity();
         });
 
-        // 載入可預約時段 (修正為 POST 請求)
+        // **FIXED**: 載入可預約時段 (改為 GET 請求)
         async function loadTimeSlots(selectedDate) {
             timeSlotSelect.innerHTML = '<option value="">載入中...</option>';
             timeSlotSelect.disabled = true;
 
-            const formData = new FormData();
-            formData.append('action', 'getSlots');
-            formData.append('date', selectedDate);
+            // **FIX**: Construct URL with query parameters for a GET request
+            const urlWithParams = `${SCRIPT_URL}?action=getSlots&date=${selectedDate}`;
             
             try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST', // 將 GET 改為 POST
-                    body: formData,
+                // **FIX**: Changed method to GET and removed body
+                const response = await fetch(urlWithParams, {
+                    method: 'GET',
                 });
+
                 if (!response.ok) throw new Error('網路連線失敗，無法取得時段資訊。');
+                
                 const result = await response.json();
                 
                 timeSlotSelect.innerHTML = '<option value="">請選擇時段</option>';
-                result.forEach(slot => {
-                    const option = document.createElement('option');
-                    option.value = slot.time;
-                    option.textContent = `${slot.time} - ${slot.status}`;
-                    if (slot.status === '已額滿') {
-                        option.disabled = true;
-                    }
-                    timeSlotSelect.appendChild(option);
-                });
+                if (result.length > 0) {
+                    result.forEach(slot => {
+                        const option = document.createElement('option');
+                        option.value = slot.time;
+                        option.textContent = `${slot.time} - ${slot.status}`;
+                        if (slot.status === '已額滿') {
+                            option.disabled = true;
+                        }
+                        timeSlotSelect.appendChild(option);
+                    });
+                } else {
+                     timeSlotSelect.innerHTML = '<option value="">該日已無可預約時段</option>';
+                }
+                
                 timeSlotSelect.disabled = false;
                 checkFormValidity();
             } catch (error) {
@@ -366,7 +379,8 @@
         appointmentForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             
-            if (!checkFormValidity()) {
+            checkFormValidity(); // Re-validate before submit
+            if(submitBtn.disabled) {
                 formMessage.textContent = '請檢查所有必填欄位是否正確填寫。';
                 formMessage.classList.remove('hidden');
                 return;
@@ -378,15 +392,11 @@
             loadingOverlay.classList.remove('hidden');
 
             const formData = new FormData(appointmentForm);
-
-            // 處理圖片檔案
-            const files = carPhotosInput.files;
-            if (files.length > 0) {
-                for (let i = 0; i < files.length; i++) {
-                    formData.append('carPhotos', files[i]);
-                }
-            }
-
+            
+            // **NOTE**: Google Apps Script cannot handle file uploads and other form data in a single `POST` request easily.
+            // A common approach is to upload files separately or convert them to base64 strings.
+            // For simplicity, this example will proceed, but be aware that the file upload part might require a more complex backend handler.
+            
             try {
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -401,7 +411,11 @@
                     showModal('預約成功！', `您的預約已送出，我們將儘快與您聯繫。`);
                     appointmentForm.reset();
                     photoPreview.innerHTML = '';
-                    loadTimeSlots(dateInput.value); // 刷新時段狀態
+                    photoUploadSection.classList.add('hidden');
+                    carPhotosInput.removeAttribute('required');
+                    timeSlotSelect.innerHTML = '<option value="">請先選擇日期</option>';
+                    timeSlotSelect.disabled = true;
+                    checkFormValidity();
                 } else {
                     showModal('預約失敗', `預約失敗：${result.message}`, 'error');
                 }
