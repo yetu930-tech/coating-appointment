@@ -309,15 +309,20 @@
             checkFormValidity();
         });
 
-        // 載入可預約時段
+        // 載入可預約時段 (修正為 POST 請求)
         async function loadTimeSlots(selectedDate) {
             timeSlotSelect.innerHTML = '<option value="">載入中...</option>';
             timeSlotSelect.disabled = true;
 
-            const url = `${SCRIPT_URL}?action=getSlots&date=${selectedDate}`;
+            const formData = new FormData();
+            formData.append('action', 'getSlots');
+            formData.append('date', selectedDate);
             
             try {
-                const response = await fetch(url, { method: 'GET' });
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST', // 將 GET 改為 POST
+                    body: formData,
+                });
                 if (!response.ok) throw new Error('網路連線失敗，無法取得時段資訊。');
                 const result = await response.json();
                 
