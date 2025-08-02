@@ -8,70 +8,81 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css">
     <!-- Tailwind CSS CDN for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- **NEW**: Integrated your professional theme configuration -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'background-dark': '#191935',
-                        'button-accent': '#D9F107',
-                        'text-light': '#F3F4F6',
-                        'text-dark': '#1F2937',
-                        'card-dark': '#2A2A4E',
+                        'car-coating': {
+                            primary: '#664dff', // A vibrant purple/blue for primary actions
+                            accent: '#D4F107',  // Your signature lime green for accents
+                            bg: '#12121c',      // A deep, dark background
+                            card: '#1c1c2b',    // A slightly lighter card background
+                            text: '#f0f2f5',    // Main text color (off-white)
+                            'text-muted': '#8c96a3' // Muted text for less important info
+                        }
                     }
                 }
             }
         }
     </script>
+    <!-- **NEW**: Updated styles to use the new theme -->
     <style>
         body {
-            background-color: #191935;
-            color: #F3F4F6;
+            background-color: #12121c; /* car-coating-bg */
+            color: #f0f2f5; /* car-coating-text */
             font-family: 'Inter', sans-serif;
         }
         .form-input, .form-select, .form-textarea {
             width: 100%;
             padding: 0.75rem;
             border-radius: 0.5rem;
-            background-color: #2A2A4E;
-            border: 1px solid #4B5563;
-            color: #F3F4F6;
+            background-color: #1c1c2b; /* car-coating-card */
+            border: 1px solid #4B5563; /* Kept a subtle border */
+            color: #f0f2f5; /* car-coating-text */
             transition: all 0.2s ease-in-out;
         }
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: #D9F107;
-            box-shadow: 0 0 0 2px rgba(217, 241, 7, 0.5);
+            border-color: #D4F107; /* car-coating-accent */
+            box-shadow: 0 0 0 2px rgba(212, 241, 7, 0.5);
+        }
+        /* Style for native date picker */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
         }
         .litepicker {
-            background-color: #2A2A4E !important;
+            background-color: #1c1c2b !important; /* car-coating-card */
             border: none !important;
+            z-index: 9999 !important;
         }
         .litepicker .container__months .month-item-header {
-            background-color: #191935;
-            color: #F3F4F6;
+            background-color: #12121c; /* car-coating-bg */
+            color: #f0f2f5; /* car-coating-text */
         }
         .litepicker .container__months .month-item-header .button-previous-month,
         .litepicker .container__months .month-item-header .button-next-month {
-            color: #D9F107;
+            color: #D4F107; /* car-coating-accent */
         }
         .litepicker .day-item {
-            color: #F3F4F6;
+            color: #f0f2f5; /* car-coating-text */
         }
         .litepicker .day-item.is-in-range,
         .litepicker .day-item.is-selected {
-            background-color: #D9F107;
-            color: #1F2937;
+            background-color: #D4F107; /* car-coating-accent */
+            color: #12121c; /* car-coating-bg for contrast */
         }
         .litepicker .day-item.is-today {
-            border: 1px solid #D9F107;
+            border: 1px solid #D4F107; /* car-coating-accent */
         }
         .litepicker .day-item.is-disabled {
-            color: #6B7280;
+            color: #8c96a3; /* car-coating-text-muted */
         }
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #D9F107;
+            border: 4px solid #4B5563;
+            border-top: 4px solid #D4F107; /* car-coating-accent */
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -83,68 +94,69 @@
         }
     </style>
 </head>
-<body class="bg-background-dark min-h-screen flex items-center justify-center p-4">
-    <div class="bg-card-dark p-8 rounded-xl shadow-lg max-w-2xl w-full">
-        <h1 class="text-3xl font-bold text-center mb-6 text-text-light">汽車鍍膜預約系統</h1>
+<body class="bg-car-coating-bg min-h-screen flex items-center justify-center p-4">
+    <div class="bg-car-coating-card p-8 rounded-xl shadow-lg max-w-2xl w-full">
+        <h1 class="text-3xl font-bold text-center mb-6 text-car-coating-text">汽車鍍膜預約系統</h1>
         <form id="appointmentForm" class="space-y-4">
 
             <!-- 表單內容 -->
             <div>
-                <label for="name" class="block text-text-light mb-1">姓名<span class="text-red-500">*</span></label>
+                <label for="name" class="block text-car-coating-text mb-1">姓名<span class="text-red-500">*</span></label>
                 <input type="text" id="name" name="name" class="form-input" placeholder="請輸入姓名" required>
             </div>
             <div>
-                <label for="phone" class="block text-text-light mb-1">手機號碼<span class="text-red-500">*</span></label>
+                <label for="phone" class="block text-car-coating-text mb-1">手機號碼<span class="text-red-500">*</span></label>
                 <input type="tel" id="phone" name="phone" class="form-input" placeholder="09xxxxxxxx" required>
                 <p id="phoneError" class="text-red-400 text-sm mt-1 hidden">請輸入有效的台灣手機號碼 (09xxxxxxxx)</p>
             </div>
             <div>
-                <label for="email" class="block text-text-light mb-1">Email</label>
+                <label for="email" class="block text-car-coating-text mb-1">Email</label>
                 <input type="email" id="email" name="email" class="form-input" placeholder="example@email.com">
             </div>
             <div>
-                <label class="block text-text-light mb-1">預約項目<span class="text-red-500">*</span></label>
-                <div class="flex space-x-4">
+                <label class="block text-car-coating-text mb-1">預約項目<span class="text-red-500">*</span></label>
+                <div class="flex space-x-4 text-car-coating-text">
                     <label class="flex items-center">
-                        <input type="radio" name="appointmentType" value="賞車" class="form-radio text-button-accent bg-card-dark border-gray-500" required>
+                        <input type="radio" name="appointmentType" value="賞車" class="form-radio text-car-coating-accent bg-car-coating-card border-gray-500" required>
                         <span class="ml-2">賞車</span>
                     </label>
                     <label class="flex items-center">
-                        <input type="radio" name="appointmentType" value="鍍膜" class="form-radio text-button-accent bg-card-dark border-gray-500" required>
+                        <input type="radio" name="appointmentType" value="鍍膜" class="form-radio text-car-coating-accent bg-car-coating-card border-gray-500" required>
                         <span class="ml-2">鍍膜</span>
                     </label>
                 </div>
             </div>
             <div>
-                <label for="date" class="block text-text-light mb-1">預約日期<span class="text-red-500">*</span></label>
-                <input type="text" id="date" name="date" class="form-input" placeholder="點擊選擇日期" readonly required>
+                <label for="date" class="block text-car-coating-text mb-1">預約日期<span class="text-red-500">*</span></label>
+                <!-- **ULTIMATE FIX**: Replaced Litepicker with a standard native date input for maximum compatibility -->
+                <input type="date" id="date" name="date" class="form-input appearance-none" required>
             </div>
             <div>
-                <label for="timeSlot" class="block text-text-light mb-1">預約時段<span class="text-red-500">*</span></label>
+                <label for="timeSlot" class="block text-car-coating-text mb-1">預約時段<span class="text-red-500">*</span></label>
                 <select id="timeSlot" name="timeSlot" class="form-select" disabled required>
                     <option value="">請先選擇日期</option>
                 </select>
             </div>
             <div>
-                <label for="notes" class="block text-text-light mb-1">備註</label>
+                <label for="notes" class="block text-car-coating-text mb-1">備註</label>
                 <textarea id="notes" name="notes" class="form-textarea" rows="3" placeholder="有任何特殊需求請在此註明..."></textarea>
             </div>
             <div id="photoUploadSection" class="hidden">
-                <label class="block text-text-light mb-1">車輛照片上傳 (最多10張，每張不超過2MB)<span class="text-red-500">*</span></label>
+                <label class="block text-car-coating-text mb-1">車輛照片上傳 (最多10張，每張不超過2MB)<span class="text-red-500">*</span></label>
                 <input type="file" id="carPhotos" name="carPhotos" class="form-input" multiple accept=".jpg, .jpeg, .png">
                 <p id="photoError" class="text-red-400 text-sm mt-1 hidden">圖片數量、格式或大小不符</p>
                 <div id="photoPreview" class="flex flex-wrap gap-2 mt-2"></div>
             </div>
             <p id="formMessage" class="text-red-400 text-sm mt-4 hidden"></p>
             <div class="flex justify-center mt-6">
-                <button type="submit" id="submitBtn" class="bg-button-accent text-text-dark font-bold py-3 px-6 rounded-lg shadow-md hover:bg-yellow-300 transition duration-200" disabled>
+                <button type="submit" id="submitBtn" class="bg-car-coating-accent text-car-coating-bg font-bold py-3 px-6 rounded-lg shadow-md hover:opacity-90 transition duration-200" disabled>
                     提交預約
                 </button>
             </div>
             <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
                 <div class="text-center">
                     <div class="spinner mx-auto mb-4"></div>
-                    <p class="text-xl">預約提交中，請稍候...</p>
+                    <p class="text-xl text-car-coating-text">預約提交中，請稍候...</p>
                 </div>
             </div>
         </form>
@@ -152,233 +164,227 @@
 
     <!-- Modal 視窗 -->
     <div id="modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
-        <div class="bg-card-dark p-8 rounded-lg shadow-2xl max-w-sm w-full text-center">
-            <h3 id="modalTitle" class="text-2xl font-bold mb-4 text-text-light"></h3>
-            <p id="modalMessage" class="mb-6 text-text-light"></p>
-            <button onclick="closeModal()" class="bg-button-accent text-text-dark font-bold py-2 px-4 rounded-lg shadow-md hover:bg-yellow-300">
+        <div class="bg-car-coating-card p-8 rounded-lg shadow-2xl max-w-sm w-full text-center">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-4 text-car-coating-text"></h3>
+            <p id="modalMessage" class="mb-6 text-car-coating-text"></p>
+            <button onclick="closeModal()" class="bg-car-coating-accent text-car-coating-bg font-bold py-2 px-4 rounded-lg shadow-md hover:opacity-90">
                 確定
             </button>
         </div>
     </div>
 
-    <!-- **FIX**: Moved all scripts to the end of the body for robust execution -->
-    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.js"></script>
+    <!-- **FIX**: Removed Litepicker script. Using native date picker now. -->
     <script>
-        // --- 變數定義 ---
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby80YhOGXc4ATA8P1OSmYcmfUPzULg72se63L_ieUyHt-iP4FJkMXZGVuSQf5dOscYv/exec'; 
-        const appointmentForm = document.getElementById('appointmentForm');
-        const appointmentTypeRadios = document.querySelectorAll('input[name="appointmentType"]');
-        const photoUploadSection = document.getElementById('photoUploadSection');
-        const carPhotosInput = document.getElementById('carPhotos');
-        const photoPreview = document.getElementById('photoPreview');
-        const timeSlotSelect = document.getElementById('timeSlot');
-        const dateInput = document.getElementById('date');
-        const submitBtn = document.getElementById('submitBtn');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const formMessage = document.getElementById('formMessage');
-        const phoneInput = document.getElementById('phone');
-        const phoneError = document.getElementById('phoneError');
-        const photoError = document.getElementById('photoError');
-        const modal = document.getElementById('modal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalMessage = document.getElementById('modalMessage');
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("DOM 已完全載入，開始執行腳本。");
 
-        // --- 函式定義 ---
+            // --- 變數定義 ---
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby80YhOGXc4ATA8P1OSmYcmfUPzULg72se63L_ieUyHt-iP4FJkMXZGVuSQf5dOscYv/exec'; 
+            const appointmentForm = document.getElementById('appointmentForm');
+            const appointmentTypeRadios = document.querySelectorAll('input[name="appointmentType"]');
+            const photoUploadSection = document.getElementById('photoUploadSection');
+            const carPhotosInput = document.getElementById('carPhotos');
+            const photoPreview = document.getElementById('photoPreview');
+            const timeSlotSelect = document.getElementById('timeSlot');
+            const dateInput = document.getElementById('date'); // Now a native date input
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const formMessage = document.getElementById('formMessage');
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            const photoError = document.getElementById('photoError');
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
 
-        function checkFormValidity() {
-            const requiredFields = Array.from(appointmentForm.querySelectorAll('[required]'));
-            let allValid = true;
-            for (const field of requiredFields) {
-                if (field.closest('.hidden')) continue;
-                if (field.type === 'radio') {
-                    if (!document.querySelector(`input[name="${field.name}"]:checked`)) {
+            // --- 函式定義 ---
+
+            function checkFormValidity() {
+                const requiredFields = Array.from(appointmentForm.querySelectorAll('[required]'));
+                let allValid = true;
+                for (const field of requiredFields) {
+                    if (field.closest('.hidden')) continue;
+                    if (field.type === 'radio') {
+                        if (!document.querySelector(`input[name="${field.name}"]:checked`)) {
+                            allValid = false;
+                            break;
+                        }
+                    } else if (!field.value.trim()) {
                         allValid = false;
                         break;
                     }
-                } else if (!field.value.trim()) {
-                    allValid = false;
-                    break;
                 }
+                if (!validatePhone(phoneInput.value)) allValid = false;
+                submitBtn.disabled = !allValid;
             }
-            if (!validatePhone(phoneInput.value)) allValid = false;
-            submitBtn.disabled = !allValid;
-        }
-        
-        function handleAppointmentTypeChange() {
-            const selectedType = document.querySelector('input[name="appointmentType"]:checked');
-            if (selectedType && selectedType.value === '鍍膜') {
-                photoUploadSection.classList.remove('hidden');
-                carPhotosInput.setAttribute('required', 'required');
-            } else {
-                photoUploadSection.classList.add('hidden');
-                carPhotosInput.removeAttribute('required');
-            }
-            checkFormValidity();
-        }
-
-        function handlePhotoUpload(event) {
-            photoPreview.innerHTML = '';
-            const files = event.target.files;
-            const maxPhotos = 10;
-            const maxFileSize = 2 * 1024 * 1024;
-            if (files.length > maxPhotos) {
-                photoError.textContent = `最多只能上傳 ${maxPhotos} 張照片。`;
-                photoError.classList.remove('hidden');
-                event.target.value = '';
-                checkFormValidity();
-                return;
-            }
-            let fileValid = true;
-            for (const file of files) {
-                if (file.size > maxFileSize) {
-                    fileValid = false;
-                    photoError.textContent = `檔案 "${file.name}" 大小超過 2MB 限制。`;
-                    break;
-                }
-                if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                    fileValid = false;
-                    photoError.textContent = `檔案 "${file.name}" 格式不正確，僅接受 JPG/PNG。`;
-                    break;
-                }
-            }
-            if (!fileValid) {
-                photoError.classList.remove('hidden');
-                event.target.value = '';
-            } else {
-                photoError.classList.add('hidden');
-                Array.from(files).forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.className = 'w-24 h-24 object-cover rounded-lg border-2 border-gray-600';
-                        photoPreview.appendChild(img);
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-            checkFormValidity();
-        }
-        
-        // **MODIFIED FOR TESTING**: This function now uses hardcoded data.
-        function loadTimeSlots(selectedDate) {
-            timeSlotSelect.innerHTML = '<option value="">載入中...</option>';
-            timeSlotSelect.disabled = true;
-            console.log(`正在為 ${selectedDate} 填入寫死的測試時段...`);
-
-            const testSlots = [
-                { time: "09:00", status: "前端測試 (可預約)" },
-                { time: "11:00", status: "前端測試 (剩餘 1 位)" },
-                { time: "14:00", status: "前端測試 (已額滿)" }
-            ];
-
-            setTimeout(() => {
-                timeSlotSelect.innerHTML = '<option value="">請選擇時段</option>';
-                if (testSlots.length > 0) {
-                    testSlots.forEach(slot => {
-                        const option = document.createElement('option');
-                        option.value = slot.time;
-                        option.textContent = `${slot.time} - ${slot.status}`;
-                        if (slot.status.includes('已額滿')) {
-                            option.disabled = true;
-                        }
-                        timeSlotSelect.appendChild(option);
-                    });
+            
+            function handleAppointmentTypeChange() {
+                const selectedType = document.querySelector('input[name="appointmentType"]:checked');
+                if (selectedType && selectedType.value === '鍍膜') {
+                    photoUploadSection.classList.remove('hidden');
+                    carPhotosInput.setAttribute('required', 'required');
                 } else {
-                     timeSlotSelect.innerHTML = '<option value="">該日已無可預約時段</option>';
+                    photoUploadSection.classList.add('hidden');
+                    carPhotosInput.removeAttribute('required');
                 }
-                timeSlotSelect.disabled = false;
                 checkFormValidity();
-                console.log("下拉選單已成功填入測試資料。");
-            }, 300); // Simulate network delay
-        }
-        
-        function validatePhone(phone) {
-            const phoneRegex = /^09\d{8}$/;
-            return phoneRegex.test(phone);
-        }
-
-        async function handleFormSubmit(event) {
-            event.preventDefault();
-            checkFormValidity();
-            if(submitBtn.disabled) {
-                formMessage.textContent = '請檢查所有必填欄位是否正確填寫。';
-                formMessage.classList.remove('hidden');
-                return;
             }
-            formMessage.classList.add('hidden');
-            loadingOverlay.classList.remove('hidden');
-            const formData = new FormData(appointmentForm);
-            try {
-                const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
-                if (!response.ok) throw new Error('網路連線失敗，請稍後再試。');
-                const result = await response.json();
-                if (result.status === 'success') {
-                    showModal('預約成功！', `您的預約已送出，我們將儘快與您聯繫。`);
-                    appointmentForm.reset();
-                    photoPreview.innerHTML = '';
-                    handleAppointmentTypeChange();
-                    timeSlotSelect.innerHTML = '<option value="">請先選擇日期</option>';
-                    timeSlotSelect.disabled = true;
+
+            function handlePhotoUpload(event) {
+                photoPreview.innerHTML = '';
+                const files = event.target.files;
+                const maxPhotos = 10;
+                const maxFileSize = 2 * 1024 * 1024;
+                if (files.length > maxPhotos) {
+                    photoError.textContent = `最多只能上傳 ${maxPhotos} 張照片。`;
+                    photoError.classList.remove('hidden');
+                    event.target.value = '';
                     checkFormValidity();
-                } else {
-                    showModal('預約失敗', `預約失敗：${result.message || '未知錯誤'}`, 'error');
+                    return;
                 }
-            } catch (error) {
-                console.error('提交表單時發生錯誤:', error);
-                showModal('發生錯誤', '提交預約時發生未預期的錯誤，請稍後再試。', 'error');
-            } finally {
-                loadingOverlay.classList.add('hidden');
+                let fileValid = true;
+                for (const file of files) {
+                    if (file.size > maxFileSize) {
+                        fileValid = false;
+                        photoError.textContent = `檔案 "${file.name}" 大小超過 2MB 限制。`;
+                        break;
+                    }
+                    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                        fileValid = false;
+                        photoError.textContent = `檔案 "${file.name}" 格式不正確，僅接受 JPG/PNG。`;
+                        break;
+                    }
+                }
+                if (!fileValid) {
+                    photoError.classList.remove('hidden');
+                    event.target.value = '';
+                } else {
+                    photoError.classList.add('hidden');
+                    Array.from(files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'w-24 h-24 object-cover rounded-lg border-2 border-gray-600';
+                            photoPreview.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+                checkFormValidity();
             }
-        }
-        
-        // Modal 視窗函式需要放在全域範圍，這樣 onclick 才能找到它們
-        window.showModal = function(title, message) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modal.classList.remove('hidden');
-        }
-        window.closeModal = function() {
-            modal.classList.add('hidden');
-        }
+            
+            // **NOTE**: This function is currently using hardcoded data for testing.
+            function loadTimeSlots(selectedDate) {
+                timeSlotSelect.innerHTML = '<option value="">載入中...</option>';
+                timeSlotSelect.disabled = true;
+                console.log(`正在為 ${selectedDate} 填入寫死的測試時段...`);
 
-        // --- 初始化 & 事件監聽 ---
-        const picker = new Litepicker({
-            element: document.getElementById('date'),
-            lang: 'zh-TW',
-            format: 'YYYY-MM-DD',
-            singleMode: true,
-            minDate: new Date(),
-            dropdowns: {
-                minYear: new Date().getFullYear(),
-                maxYear: new Date().getFullYear() + 2,
-                months: true,
-                years: true
-            },
-            // **NEW**: 整合您的優化建議
-            zIndex: 50, 
-            setup: (picker) => {
-                picker.on('selected', (date) => {
-                    console.log("日期已選擇:", date.format('YYYY-MM-DD'));
-                    loadTimeSlots(date.format('YYYY-MM-DD'));
-                    // **NEW**: 整合您的優化建議
-                    picker.hide(); 
-                });
+                const testSlots = [
+                    { time: "09:00", status: "前端測試 (可預約)" },
+                    { time: "11:00", status: "前端測試 (剩餘 1 位)" },
+                    { time: "14:00", status: "前端測試 (已額滿)" }
+                ];
+
+                setTimeout(() => {
+                    timeSlotSelect.innerHTML = '<option value="">請選擇時段</option>';
+                    if (testSlots.length > 0) {
+                        testSlots.forEach(slot => {
+                            const option = document.createElement('option');
+                            option.value = slot.time;
+                            option.textContent = `${slot.time} - ${slot.status}`;
+                            if (slot.status.includes('已額滿')) {
+                                option.disabled = true;
+                            }
+                            timeSlotSelect.appendChild(option);
+                        });
+                    } else {
+                         timeSlotSelect.innerHTML = '<option value="">該日已無可預約時段</option>';
+                    }
+                    timeSlotSelect.disabled = false;
+                    checkFormValidity();
+                    console.log("下拉選單已成功填入測試資料。");
+                }, 300); // Simulate network delay
             }
-        });
-        
-        appointmentForm.addEventListener('submit', handleFormSubmit);
-        appointmentForm.addEventListener('input', checkFormValidity);
-        appointmentTypeRadios.forEach(radio => radio.addEventListener('change', handleAppointmentTypeChange));
-        carPhotosInput.addEventListener('change', handlePhotoUpload);
-        phoneInput.addEventListener('input', () => {
-            phoneError.classList.toggle('hidden', validatePhone(phoneInput.value));
-        });
+            
+            function validatePhone(phone) {
+                const phoneRegex = /^09\d{8}$/;
+                return phoneRegex.test(phone);
+            }
 
-        // --- 初始執行 ---
-        checkFormValidity();
-        console.log("腳本已在 body 結尾處執行完畢。");
+            async function handleFormSubmit(event) {
+                event.preventDefault();
+                checkFormValidity();
+                if(submitBtn.disabled) {
+                    formMessage.textContent = '請檢查所有必填欄位是否正確填寫。';
+                    formMessage.classList.remove('hidden');
+                    return;
+                }
+                formMessage.classList.add('hidden');
+                loadingOverlay.classList.remove('hidden');
+                const formData = new FormData(appointmentForm);
+                try {
+                    const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+                    if (!response.ok) throw new Error('網路連線失敗，請稍後再試。');
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        showModal('預約成功！', `您的預約已送出，我們將儘快與您聯繫。`);
+                        appointmentForm.reset();
+                        photoPreview.innerHTML = '';
+                        handleAppointmentTypeChange();
+                        timeSlotSelect.innerHTML = '<option value="">請先選擇日期</option>';
+                        timeSlotSelect.disabled = true;
+                        checkFormValidity();
+                    } else {
+                        showModal('預約失敗', `預約失敗：${result.message || '未知錯誤'}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('提交表單時發生錯誤:', error);
+                    showModal('發生錯誤', '提交預約時發生未預期的錯誤，請稍後再試。', 'error');
+                } finally {
+                    loadingOverlay.classList.add('hidden');
+                }
+            }
+            
+            // Modal 視窗函式需要放在全域範圍，這樣 onclick 才能找到它們
+            window.showModal = function(title, message) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                modal.classList.remove('hidden');
+            }
+            window.closeModal = function() {
+                modal.classList.add('hidden');
+            }
 
+            // --- 初始化 & 事件監聽 ---
+            console.log("準備設定事件監聽器...");
+            
+            // Set min date for the native date picker
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today);
+            
+            // Attach a simple 'change' event listener to the native date picker.
+            dateInput.addEventListener('change', (event) => {
+                const selectedDate = event.target.value; // Format is already YYYY-MM-DD
+                if (selectedDate) {
+                    console.log("日期已選擇 (原生選擇器):", selectedDate);
+                    loadTimeSlots(selectedDate);
+                }
+            });
+            console.log("原生日期選擇器的 'change' 事件已綁定。");
+            
+            appointmentForm.addEventListener('submit', handleFormSubmit);
+            appointmentForm.addEventListener('input', checkFormValidity);
+            appointmentTypeRadios.forEach(radio => radio.addEventListener('change', handleAppointmentTypeChange));
+            carPhotosInput.addEventListener('change', handlePhotoUpload);
+            phoneInput.addEventListener('input', () => {
+                phoneError.classList.toggle('hidden', validatePhone(phoneInput.value));
+            });
+
+            // --- 初始執行 ---
+            checkFormValidity();
+            console.log("腳本已在 body 結尾處執行完畢。");
+        });
     </script>
 </body>
 </html>
